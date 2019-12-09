@@ -14,10 +14,12 @@ public class LongestPath {
 	LabyrinthUserInterface ui;
 	static final int WIDTH = 32; 
 	static final int HEIGHT = 24;
-	int currentX;
-	int currentY;
-	int endX;
-	int endY;
+
+	CoordinateArray wall;
+	CoordinateArray currentPath;
+	CoordinateArray longestPath;
+	Coordinate currentCoordinate;
+	Coordinate destinationCoordinate;
 
 
 	
@@ -27,10 +29,10 @@ public class LongestPath {
 	}
 
 	public void findPath(){
-	Coordinate west = new Coordinate(currentX - 1, currentY);
-	Coordinate south = new Coordinate(currentX, currentY + 1);
-	Coordinate east = new Coordinate(currentX + 1, currentY);
-	Coordinate north = new Coordinate(currentX, currentY - 1);	
+		Coordinate west = new Coordinate(currentCoordinate.getX() - 1, currentCoordinate.getY());
+		Coordinate south = new Coordinate(currentCoordinate.getX(), currentCoordinate.getY() + 1);
+		Coordinate east = new Coordinate(currentCoordinate.getX() + 1, currentCoordinate.getY());
+		Coordinate north = new Coordinate(currentCoordinate.getX(), currentCoordinate.getY() - 1);	
 		// if (isEmpty(west)){
 		// 		;
 		// }
@@ -65,35 +67,35 @@ public class LongestPath {
 			}
 
 	}
+
+	public void setUpScreen(Scanner fileScanner){
+		fileScanner.useDelimiter("=");
+		String start = fileScanner.next();
+		String[] startArray = start.split(" ");
+		currentCoordinate = new Coordinate(Integer.parseInt(startArray[0]),Integer.parseInt(startArray[1])); 
+		ui.place(currentCoordinate.getX(), currentCoordinate.getY(), ui.PATH);
+		// ui.place(3, 1, ui.PATH);
+
+		System.out.println(Arrays.toString(startArray));
+		String end = fileScanner.next();
+		String[] endArray = end.split(" ");
+		destinationCoordinate = new Coordinate(Integer.parseInt(endArray[0]),Integer.parseInt(endArray[1]));
+		ui.encircle(destinationCoordinate.getX(), destinationCoordinate.getY());
+		// System.out.println(Arrays.toString(endArray));
+
+		Scanner myWalls = fileScanner; // technically, you don't need to store in variable
+		printMyWalls(myWalls);
+		ui.showChanges();
+	}
 	
 	public void start() {
 //		Scanner fileScanner = UIAuxiliaryMethods.askUserForInput().getScanner();
 		File file = new File("/Users/khangnguyen/eclipse-workspace/Introduction to Programming/module1/LongestPath/LongestPathInput1.txt");
 		try {
 			Scanner fileScanner = new Scanner(file);
-			fileScanner.useDelimiter("=");
-			
-			String start = fileScanner.next();
-			String[] startArray = start.split(" ");
-			currentX = Integer.parseInt(startArray[0]);
-			currentY = Integer.parseInt(startArray[1]); 
-			ui.place(currentX, currentY, ui.PATH);
-			ui.place(1, 0, ui.PATH);
-
-			System.out.println(Arrays.toString(startArray));
-			String end = fileScanner.next();
-			String[] endArray = end.split(" ");
-			endX = Integer.parseInt(endArray[0]);
-			endY = Integer.parseInt(endArray[1]); 
-			ui.place(endX, endY, ui.PATH);
-			// System.out.println(Arrays.toString(endArray));
-
-			Scanner myWalls = fileScanner; // technically, you don't need to store in variable
-			printMyWalls(myWalls);
-			ui.showChanges();
-
+			setUpScreen(fileScanner);
+			fileScanner.close();
 			// findPath();
-
 
 		}
 		catch (FileNotFoundException e) {
@@ -103,7 +105,7 @@ public class LongestPath {
 	
 	public static void main(String[] args) {
 		new LongestPath().start();
-		System.out.println("end!");
+
 	}
 
 }

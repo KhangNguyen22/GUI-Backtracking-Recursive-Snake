@@ -3,12 +3,8 @@ package LongestPath;
 public class CoordinateArray {
     Coordinate[] path;
 
-    public CoordinateArray(){
-
-    }
-
     public void append(Coordinate current){
-        if (path.length == 0 ){
+        if (path == null){
             path = new Coordinate[1];
             path[0] = current;
         }
@@ -23,7 +19,17 @@ public class CoordinateArray {
         }
     }
 
-    public void pop(){
+    public Coordinate pop(){
+        Coordinate lastElement = path[path.length - 1];
+
+        Coordinate[] temp = new Coordinate[path.length - 1];
+
+        for (int i = 0; i < path.length -1; i++){
+            temp[i] = path[i];
+        }
+        path = temp;
+
+        return lastElement;
         //To do pop off the end, look on google how to manually do arraylist using arrays only.
     }
 
