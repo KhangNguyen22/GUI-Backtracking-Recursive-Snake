@@ -22,7 +22,6 @@ public class LongestPath {
 	Coordinate destinationCoordinate;
 	int waitingTime = 20;
 
-
 	
 	public LongestPath() {
 		ui = UserInterfaceFactory.getLabyrinthUI(WIDTH, HEIGHT);
