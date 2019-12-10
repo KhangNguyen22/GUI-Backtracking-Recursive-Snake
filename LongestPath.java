@@ -214,12 +214,14 @@ public class LongestPath {
 			Coordinate cur = currentPath.getPath()[i];
 			ui.place(cur.getX(), cur.getY(), ui.EMPTY);
 			ui.showChanges();
+			ui.wait(10);
 		}
 
 		for (int x = 0; x < longestPath.getPathLength(); x++){
 			Coordinate cur = longestPath.getPath()[x];
 			ui.place(cur.getX(), cur.getY(), ui.PATH);
 			ui.showChanges();
+			ui.wait(10);
 		}
 	}
 	
