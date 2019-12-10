@@ -20,7 +20,7 @@ public class LongestPath {
 	CoordinateArray longestPath;
 	Coordinate currentCoordinate;
 	Coordinate destinationCoordinate;
-	int waitingTime = 0;
+	int waitingTime = 30;
 
 
 	
@@ -94,7 +94,7 @@ public class LongestPath {
 					System.out.println(longestPath.getPathLength());
 					System.out.println();
 				}
-				return;
+				// return;
 			}
 			else {
 					findPath();
@@ -133,7 +133,7 @@ public class LongestPath {
 		// ui.showChanges();
 		// clearLastCircle();
 		// System.out.println("Stuck");
-		// ui.wait(1);
+		ui.wait(10);
 	}
 
 	public void clearLastCircle(){
