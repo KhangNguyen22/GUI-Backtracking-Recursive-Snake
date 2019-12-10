@@ -15,17 +15,20 @@ public class LongestPath {
 	static final int WIDTH = 32; 
 	static final int HEIGHT = 24;
 
-	CoordinateArray wall;
+	CoordinateArray walls;
 	CoordinateArray currentPath;
 	CoordinateArray longestPath;
 	Coordinate currentCoordinate;
 	Coordinate destinationCoordinate;
+	int waitingTime = 20;
 
 
 	
 	public LongestPath() {
 		ui = UserInterfaceFactory.getLabyrinthUI(WIDTH, HEIGHT);
-		
+		walls = new CoordinateArray();
+		currentPath = new CoordinateArray();
+		longestPath = new CoordinateArray();
 	}
 
 	public void findPath(){
@@ -33,38 +36,153 @@ public class LongestPath {
 		Coordinate south = new Coordinate(currentCoordinate.getX(), currentCoordinate.getY() + 1);
 		Coordinate east = new Coordinate(currentCoordinate.getX() + 1, currentCoordinate.getY());
 		Coordinate north = new Coordinate(currentCoordinate.getX(), currentCoordinate.getY() - 1);	
-		// if (isEmpty(west)){
-		// 		;
-		// }
-		// elif (isEmpty(south)){
-		// 	;
-		// }
-		// elif (isEmpty(east)){
-		// 		;
-		// }
-		// elif (isEmpty(north)){
-		// 	;
-		// }
+		if (isEmpty(west)){
+			System.out.println();
+			System.out.println("WEST");
+			// Check if we reach destination in west
+			currentCoordinate = west;
+			currentPath.append(west);
+			ui.place(west.getX(), west.getY(), ui.PATH);
+			ui.showChanges();
+			ui.wait(waitingTime);
+
+			if ( west.getX() == destinationCoordinate.getX() && west.getY() == destinationCoordinate.getY() ){
+				return;
+			}
+			else {
+					findPath();
+			}
+			System.out.println("West Return");
+			clearLastCircle();
+
+		}
+		
+		if (isEmpty(south)){
+			System.out.println();
+			System.out.println("SOUTH");
+			currentCoordinate = south;
+			currentPath.append(south);
+			ui.place(south.getX(), south.getY(), ui.PATH);
+			ui.showChanges();
+			ui.wait(waitingTime);
+			if ( south.getX() == destinationCoordinate.getX() && south.getY() == destinationCoordinate.getY() ){
+				return;
+			}
+			else {
+					findPath();
+			}
+			System.out.println("SOUTH Return");
+			clearLastCircle();	
+		}
+		if (isEmpty(east)){
+			System.out.println();
+			System.out.println("EAST");
+			currentCoordinate = east;
+			currentPath.append(east);
+			ui.place(east.getX(), east.getY(), ui.PATH);
+			ui.showChanges();
+			ui.wait(waitingTime);
+			if ( east.getX() == destinationCoordinate.getX() && east.getY() == destinationCoordinate.getY() ){
+				System.out.println("east is up");
+				System.out.println(currentPath.getPathLength());
+				if (currentPath.getPathLength() > longestPath.getPathLength()){
+					longestPath = new CoordinateArray();
+					for (int i = 0; i < currentPath.getPathLength(); i++){
+						longestPath.append(currentPath.getPath()[i]);
+					}
+					System.out.println("Longest Path currently: ");
+					System.out.println(longestPath.getPathLength());
+					System.out.println();
+				}
+				return;
+			}
+			else {
+					findPath();
+			}
+			System.out.println("EAST Return");
+			clearLastCircle();
+				
+		}
+		System.out.println(currentPath.getPath()[currentPath.getPathLength() - 1].getX());
+		System.out.println(currentPath.getPath()[currentPath.getPathLength() - 1].getY());
+		if (isEmpty(north)){
+			System.out.println();
+			System.out.println("North");
+			currentCoordinate = north;
+			System.out.println(currentCoordinate.getX());
+			System.out.println(currentCoordinate.getY());
+			currentPath.append(north);
+			ui.place(north.getX(), north.getY(), ui.PATH);
+			ui.showChanges();
+			ui.wait(waitingTime);
+			
+			if ( north.getX() == destinationCoordinate.getX() && north.getY() == destinationCoordinate.getY() ){
+				return;
+			}
+			else {
+					findPath();
+			}
+			System.out.println("NORTH return");
+			clearLastCircle();
+		}
+		// if all of this fails, please back track and clear current coordinate
+		// Coordinate lastElement = currentPath.pop();
+		// System.out.print(Integer.toString(lastElement.getX()) + ",");
+		// System.out.println(lastElement.getY());
+		// ui.place(lastElement.getX(), lastElement.getY(), ui.EMPTY);
+		// ui.showChanges();
+		// clearLastCircle();
+		// System.out.println("Stuck");
+		ui.wait(100);
 	}
 
-	// public boolean isEmpty(Coordinate direction){
+	public void clearLastCircle(){
+		Coordinate lastElement = currentPath.pop();
+		System.out.print(Integer.toString(lastElement.getX()) + ",");
+		System.out.println(lastElement.getY());
+		ui.place(lastElement.getX(), lastElement.getY(), ui.EMPTY);
+		ui.showChanges();
+	}
+	public boolean isEmpty(Coordinate direction){
+		// check wall and currentPath (as you don't want to eat yourself)
 
-	// }
+		for (int x = 0; x < walls.getPathLength(); x++){
+			if ( direction.getX() == walls.getPath()[x].getX() && direction.getY() == walls.getPath()[x].getY() ){
+				return false;
+			}
+		}
+
+		for (int i = 0; i < currentPath.getPathLength(); i++){
+			if ( direction.getX() == currentPath.getPath()[i].getX() && direction.getY() == currentPath.getPath()[i].getY() ) {
+				return false;
+			}
+		}
+
+		return true;
+
+	}
 
 	public void printMyWalls(Scanner fileScanner){
 		System.out.println("In printMyWalls");
-		String firstWall = fileScanner.nextLine();	
-		String[] array1 = firstWall.substring(1).split(" ");
-		ui.place(Integer.parseInt(array1[0]), Integer.parseInt(array1[1]), ui.WALL);
-		System.out.println(fileScanner.nextLine());
+		String firstWall = fileScanner.skip("=").nextLine();	
+		String[] array1 = firstWall.split(" ");
+		Coordinate wallCoordinate = new Coordinate(Integer.parseInt(array1[0]), Integer.parseInt(array1[1]));
+		ui.place(wallCoordinate.getX(), wallCoordinate.getY(), ui.WALL);
+
+		walls.append(wallCoordinate);
+
 		while (fileScanner.hasNextLine()) {
-			// System.out.println(fileScanner.hasNextLine());
-			// System.out.println(fileScanner.nextLine());
 				String currentWall = fileScanner.nextLine();
 				String[] currentArray = currentWall.split(" ");
-				ui.place(Integer.parseInt(currentArray[0]), Integer.parseInt(currentArray[1]), ui.WALL);	
-				// System.out.println(Arrays.toString(currentArray));
+				Coordinate currentWallCoordinate = new Coordinate(Integer.parseInt(currentArray[0]), Integer.parseInt(currentArray[1]));
+				ui.place(currentWallCoordinate.getX(), currentWallCoordinate.getY(), ui.WALL);
+				
+				walls.append(currentWallCoordinate);
+			
 			}
+
+		// System.out.println("we are here");
+        // System.out.println(walls.getPathLength());
 
 	}
 
@@ -74,14 +192,16 @@ public class LongestPath {
 		String[] startArray = start.split(" ");
 		currentCoordinate = new Coordinate(Integer.parseInt(startArray[0]),Integer.parseInt(startArray[1])); 
 		ui.place(currentCoordinate.getX(), currentCoordinate.getY(), ui.PATH);
-		// ui.place(3, 1, ui.PATH);
+		
+		// As the currentCoordinate is currently the starting coordinate, we append to currentPath.
+		currentPath.append(currentCoordinate);
+		// ui.place(21, 21, ui.PATH);
 
 		System.out.println(Arrays.toString(startArray));
 		String end = fileScanner.next();
 		String[] endArray = end.split(" ");
 		destinationCoordinate = new Coordinate(Integer.parseInt(endArray[0]),Integer.parseInt(endArray[1]));
 		ui.encircle(destinationCoordinate.getX(), destinationCoordinate.getY());
-		// System.out.println(Arrays.toString(endArray));
 
 		Scanner myWalls = fileScanner; // technically, you don't need to store in variable
 		printMyWalls(myWalls);
@@ -95,8 +215,13 @@ public class LongestPath {
 			Scanner fileScanner = new Scanner(file);
 			setUpScreen(fileScanner);
 			fileScanner.close();
-			// findPath();
+			findPath();
 
+			if (longestPath != null){
+				System.out.println("FINAL Longest PATH: ");
+				System.out.println(longestPath.getPathLength());
+				System.out.println();
+			}
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -105,7 +230,7 @@ public class LongestPath {
 	
 	public static void main(String[] args) {
 		new LongestPath().start();
-
+		System.out.println("ending!");
 	}
 
 }

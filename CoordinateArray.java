@@ -20,6 +20,11 @@ public class CoordinateArray {
     }
 
     public Coordinate pop(){
+        // if (path.length == 1){
+        //     System.out.println("In coordinateArray, pop has one element left");
+        //     return getPath()[0];
+        // }
+        // else{
         Coordinate lastElement = path[path.length - 1];
 
         Coordinate[] temp = new Coordinate[path.length - 1];
@@ -30,6 +35,7 @@ public class CoordinateArray {
         path = temp;
 
         return lastElement;
+    // }
         //To do pop off the end, look on google how to manually do arraylist using arrays only.
     }
 
@@ -38,7 +44,10 @@ public class CoordinateArray {
     }
 
     public int getPathLength(){
-        return path.length;
+        if (path != null){
+            return path.length;
+        }
+        return 0;
     }
 
 
