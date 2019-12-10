@@ -20,7 +20,7 @@ public class LongestPath {
 	CoordinateArray longestPath;
 	Coordinate currentCoordinate;
 	Coordinate destinationCoordinate;
-	int waitingTime = 20;
+	int waitingTime = 0;
 
 
 	
@@ -133,7 +133,7 @@ public class LongestPath {
 		// ui.showChanges();
 		// clearLastCircle();
 		// System.out.println("Stuck");
-		ui.wait(100);
+		// ui.wait(1);
 	}
 
 	public void clearLastCircle(){
@@ -195,7 +195,7 @@ public class LongestPath {
 		
 		// As the currentCoordinate is currently the starting coordinate, we append to currentPath.
 		currentPath.append(currentCoordinate);
-		// ui.place(21, 21, ui.PATH);
+		// ui.place(24, 1, ui.PATH);
 
 		System.out.println(Arrays.toString(startArray));
 		String end = fileScanner.next();
@@ -206,6 +206,21 @@ public class LongestPath {
 		Scanner myWalls = fileScanner; // technically, you don't need to store in variable
 		printMyWalls(myWalls);
 		ui.showChanges();
+	}
+
+	public void drawFinalPath(){
+		System.out.println("In Draw FINAL");
+		for (int i = 0; i < currentPath.getPathLength(); i++){
+			Coordinate cur = currentPath.getPath()[i];
+			ui.place(cur.getX(), cur.getY(), ui.EMPTY);
+			ui.showChanges();
+		}
+
+		for (int x = 0; x < longestPath.getPathLength(); x++){
+			Coordinate cur = longestPath.getPath()[x];
+			ui.place(cur.getX(), cur.getY(), ui.PATH);
+			ui.showChanges();
+		}
 	}
 	
 	public void start() {
@@ -221,6 +236,7 @@ public class LongestPath {
 				System.out.println("FINAL Longest PATH: ");
 				System.out.println(longestPath.getPathLength());
 				System.out.println();
+				drawFinalPath();
 			}
 		}
 		catch (FileNotFoundException e) {
