@@ -1,4 +1,4 @@
-# GUI-Recursive-Snake
+# GUI Backtracking Recursive Snake
 
 <img src="gif/demo.gif" width="600" >
 
