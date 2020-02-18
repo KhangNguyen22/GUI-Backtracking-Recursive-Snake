@@ -10,7 +10,7 @@ git clone https://github.com/KhangNguyen99/GUI-Recursive-Snake.git
 
 cd GUI-Recursive-Snake/
 
-// Edit the LongestPath.java line 175 so that it points to your respective directory holding the file LongestPathInput1.txt
+Note: Edit the LongestPath.java line 175 so that it points to your respective directory holding the file LongestPathInput1.txt
 
 ./run.sh
 
